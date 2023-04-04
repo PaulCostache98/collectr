@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Quests List</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div th:replace="fragments/navbar.html :: topnav"></div>
+
+<div>
+  <a href="/create-quest" type="button"
+     class="btn btn-primary btn-sm">Create Custom Quest</a>
+    <div th:each="quest : ${questList}">
+      <a th:text="${'Quest Name: ' + quest.getQuestName()}"></a>
+        <p th:text="${'Quest Description: ' + quest.getQuestDescription()}"></p>
+        <p th:text="${'Quest Type: ' + quest.getQuestType()}"></p>
+        <p th:text="${'Status(For User): ' + completed}"></p>
+    </div>
+
+</div>
+
+</body>
+</html>
