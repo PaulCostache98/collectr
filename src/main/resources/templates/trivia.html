@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Quests List</title>
+  <script>
+
+function onClick() {
+  var answer = document.getElementById("input").value;
+};
+     </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<form>
+
+
+
+    <legend>Questions</legend>
+
+    <label th:text="${question.getQuestion()}"></label><br>
+
+  <button type="submit" class="btn btn-success" value="a" th:text="${secondWrongAnswer}"></button><br>
+
+  <button type="submit" class="btn btn-success" name="question1" value="b" th:text="${firstWrongAnswer}"></button><br>
+
+  <button type="submit" class="btn btn-success" name="question1" value="c" th:text="${correctAnswer}" ></button><br>
+
+
+</form>
+
+</body>
+
+</html>

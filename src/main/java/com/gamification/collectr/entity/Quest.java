@@ -33,7 +33,10 @@ public class Quest {
     private String questType;
 
     @Transient
-    private List<MyUser> completed;
+    private Set<MyUser> completed;
+
+    @Column(name = "reward", nullable = false)
+    private Integer reward;
 
     @ManyToMany(mappedBy = "quests")
     @JsonIgnore
@@ -47,6 +50,7 @@ public class Quest {
         this.questType = quest.getQuestType();
         this.completed = quest.getCompleted();
         this.users = quest.getUsers();
+        this.reward = quest.getReward();
     }
 
 

@@ -34,11 +34,16 @@ public class Badge {
     @Column(name = "image_source")
     private String imgSource;
 
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
     public Badge(Badge badge) {
         this.id = badge.getId();
         this.badgeName = badge.getBadgeName();
         this.users = badge.getUsers();
         this.imgSource = badge.getImgSource();
+        this.game = badge.getGame();
     }
 
 

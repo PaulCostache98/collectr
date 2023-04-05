@@ -4,8 +4,10 @@ import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
 import com.gamification.collectr.entity.Role;
 import com.gamification.collectr.entity.Badge;
+import com.gamification.collectr.entity.Game;
 import com.gamification.collectr.repository.BadgeRepository;
 import com.gamification.collectr.service.BadgeService;
+import com.gamification.collectr.service.GameService;
 import com.gamification.collectr.service.QuestService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class RunAtStartup {
     private BadgeService badgeService;
     @Autowired
     private BadgeRepository badgeRepository;
+
+    @Autowired
+    private GameService gameService;
 
 
     @EventListener(ContextRefreshedEvent.class)
@@ -61,17 +66,30 @@ public class RunAtStartup {
         quest.setQuestName("Daily Trivia I");
         quest.setQuestDescription("Complete 5 Trivia games successfully.");
         quest.setQuestType("Daily");
+        quest.setReward(50);
         questService.saveQuest(quest);
 
         Badge badge = new Badge();
         badge.setBadgeName("Trivia Master Bronze");
         badge.setId(1L);
         badge.setImgSource("https://w7.pngwing.com/pngs/919/532/png-transparent-bronze-medal-bronze-medal-gold-medal-medal-medal-gold-material-thumbnail.png");
+        badgeService.saveBadge(badge);
+
+        Game game = new Game();
+        game.setId(1L);
+        game.setName("Trivia");
+        game.setType("Trivia");
+        game.setImgSource("https://png.pngtree.com/png-vector/20210903/ourmid/pngtree-trivia-poster-png-image_3862027.jpg");
+        gameService.saveGame(game);
+
 
         myUser.setQuests(Set.of(quest));
         myUser.setBadges(Set.of(badge));
         quest.setUsers(Set.of(myUser));
         badge.setUsers(Set.of(myUser));
+        game.setBadges(Set.of(badge));
+        badge.setGame(game);
+        gameService.saveGame(game);
         badgeService.saveBadge(badge);
         questService.saveQuest(quest);
         userService.saveUser(myUser);

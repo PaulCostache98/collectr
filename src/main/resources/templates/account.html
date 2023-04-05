@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:class="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PC Shop</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link th:href="@{/css/sidenav.css}" rel="stylesheet"/>
+
+  <style>
+            /* Style the tab */
+    .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+    background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+    background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: topnav"></div>
+
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'accountSummary')" id="defaultOpen">Account Summary</button>
+  <button class="tablinks" onclick="openTab(event, 'questHistory')">Quests Status</button>
+  <!--    <button class="tablinks" onclick="openTab(event, 'deleteAccount')" th:if="${!userDetails.isAdmin()}">Delete Account</button>-->
+</div>
+<!-- Tab content -->
+<div id="accountSummary" class="tabcontent">
+  <h3 th:text="${userDetails.getFullName()}"></h3>
+  <p>Username: <span th:text="${userDetails.getUsername()}"></span></p>
+  <p>Full Name: <span th:text="${userDetails.getFullName()}"></span></p>
+  <p>Email: <span th:text="${userDetails.getEmail()}"></span></p>
+  <p>Roles: <span th:each="role : ${userDetails.getRoles()}" th:text="${role.getName().replaceFirst('ROLE_', '')} + ' '"></span></p>
+</div>
+
+<div id="questHistory" class="tabcontent">
+  <h3>Quest History</h3>
+  <p th:each="quest : ${quests}">Completed Quests:
+    <span th:text="${quest.getQuestName() + ' - ' + quest.getReward() + '$'}"></span></p>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+
+</body>
+</html>

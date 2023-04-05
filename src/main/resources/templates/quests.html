@@ -17,10 +17,12 @@
   <a href="/create-quest" type="button"
      class="btn btn-primary btn-sm">Create Custom Quest</a>
     <div th:each="quest : ${questList}">
-      <a th:text="${'Quest Name: ' + quest.getQuestName()}"></a>
+      <a th:if="${completed == 'Completed'}" th:href="@{/quests/{id}(id=${quest.getId()})}" th:text="${'Quest Name: ' + quest.getQuestName()}"></a>
+        <p th:if="${completed == 'Not Completed'}" th:text="${'Quest Name: ' + quest.getQuestName()}"></p>
         <p th:text="${'Quest Description: ' + quest.getQuestDescription()}"></p>
         <p th:text="${'Quest Type: ' + quest.getQuestType()}"></p>
         <p th:text="${'Status(For User): ' + completed}"></p>
+        <p th:if="${completed == 'Not Completed'}"><a href="/games">Complete Now!</a></p>
     </div>
 
 </div>
