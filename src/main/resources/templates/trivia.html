@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Quests List</title>
-  <script>
-
-function onClick() {
-  var answer = document.getElementById("input").value;
-};
-     </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -25,12 +19,13 @@ function onClick() {
     <legend>Questions</legend>
 
     <label th:text="${question.getQuestion()}"></label><br>
+  <a href="/games/1/answer/0" class="button" th:text="${answers.get(0)}"></a><br>
 
-  <button type="submit" class="btn btn-success" value="a" th:text="${secondWrongAnswer}"></button><br>
+  <a href="/games/1/answer/1" th:text="${answers.get(1)}" class="button"></a><br>
 
-  <button type="submit" class="btn btn-success" name="question1" value="b" th:text="${firstWrongAnswer}"></button><br>
-
-  <button type="submit" class="btn btn-success" name="question1" value="c" th:text="${correctAnswer}" ></button><br>
+  <a href="/games/1/answer/2" th:text="${answers.get(2)}" class="button"></a><br>
+    <p th:text="${count + '/5'}"></p>
+    <p th:text="${'Correct Answers: ' + correctCount}"></p>
 
 
 </form>

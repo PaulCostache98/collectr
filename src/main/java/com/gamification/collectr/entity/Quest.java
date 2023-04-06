@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -32,8 +33,11 @@ public class Quest {
     @Column(name = "quest_type", nullable = false)
     private String questType;
 
-    @Transient
-    private Set<MyUser> completed;
+    @Column
+    private List<Integer> steps;
+
+    @Column
+    private List<MyUser> completed;
 
     @Column(name = "reward", nullable = false)
     private Integer reward;
@@ -41,7 +45,7 @@ public class Quest {
     @ManyToMany(mappedBy = "quests")
     @JsonIgnore
     @ToString.Exclude
-    private Set<MyUser> users;
+    private List<MyUser> users;
 
     public Quest(Quest quest) {
         this.id = quest.getId();
@@ -51,6 +55,7 @@ public class Quest {
         this.completed = quest.getCompleted();
         this.users = quest.getUsers();
         this.reward = quest.getReward();
+        this.steps = quest.getSteps();
     }
 
 

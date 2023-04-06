@@ -15,8 +15,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class RunAtStartup {
@@ -65,8 +64,13 @@ public class RunAtStartup {
         quest.setId(1L);
         quest.setQuestName("Daily Trivia I");
         quest.setQuestDescription("Complete 5 Trivia games successfully.");
-        quest.setQuestType("Daily");
+        quest.setQuestType("Trivia");
         quest.setReward(50);
+        List<MyUser> completed = new ArrayList<>();
+        List<Integer> steps = new ArrayList<>();
+        steps.add(1);
+        quest.setCompleted(completed);
+        quest.setSteps(steps);
         questService.saveQuest(quest);
 
         Badge badge = new Badge();
@@ -82,10 +86,17 @@ public class RunAtStartup {
         game.setImgSource("https://png.pngtree.com/png-vector/20210903/ourmid/pngtree-trivia-poster-png-image_3862027.jpg");
         gameService.saveGame(game);
 
+        Game gameTwo = new Game();
+        game.setId(2L);
+        game.setName("Miner");
+        game.setType("Clicker");
+        game.setImgSource("https://cdn-icons-png.flaticon.com/512/8309/8309198.png");
+        gameService.saveGame(gameTwo);
+
 
         myUser.setQuests(Set.of(quest));
         myUser.setBadges(Set.of(badge));
-        quest.setUsers(Set.of(myUser));
+        quest.setUsers(List.of(myUser));
         badge.setUsers(Set.of(myUser));
         game.setBadges(Set.of(badge));
         badge.setGame(game);

@@ -69,6 +69,11 @@
   <h3>Quest History</h3>
   <p th:each="quest : ${quests}">Completed Quests:
     <span th:text="${quest.getQuestName() + ' - ' + quest.getReward() + '$'}"></span></p>
+
+  <h3>Active Quests</h3>
+  <p th:each="activeQuest : ${activeQuests}">
+    <span th:text="${activeQuest.getQuestName() + ' - ' + activeQuest.getReward() + '$'}"></span><br>
+  <span th:text="${'Steps - ' + activeQuest.getSteps()}"></span></p>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

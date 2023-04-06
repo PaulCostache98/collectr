@@ -30,7 +30,9 @@ public class AccountController {
                 quests.add(q);
             }
         }
+        Set<Quest> activeQuests = new HashSet<>(user.getQuests());
         model.addAttribute("quests", quests);
+        model.addAttribute("activeQuests", activeQuests);
         model.addAttribute("user", user.getFullName());
         model.addAttribute("userDetails", user);
 
