@@ -19,9 +19,36 @@
     }
 
     </style>
+  <script type="text/javascript">
+    var steps=0;
+    function changeSteps() {
+    var tierSelection = document.getElementById("tierSelection");
+    var selectedValue = tierSelection.options[tierSelection.selectedIndex].value;
+   if(selectedValue == 1) {
+   	document.getElementById('stepsInput').value=10;
+   	document.getElementById('rewardInput').value=10;
+   	document.getElementById('costInput').value=50;
+   }
+
+   if(selectedValue == 2) {
+   	document.getElementById('stepsInput').value=15;
+   	document.getElementById('rewardInput').value=50;
+   	document.getElementById('costInput').value=100;
+   }
+
+      if(selectedValue == 3) {
+   	document.getElementById('stepsInput').value=20;
+   	document.getElementById('rewardInput').value=100;
+   	document.getElementById('costInput').value=150;
+   }
+   }
+
+
+</script>
 
 </head>
-<body><br><br>
+<body>
+<div th:replace="fragments/navbar.html :: topnav"></div>
 <div class="container-fluid text-center">
   <div class="text-center"><h1>Create a Custom Quest</h1></div>
 
@@ -32,13 +59,28 @@
     <label class="col-sm-4 col-form-label"><h4>Description:</h4></label>
     <input type="text" th:field="*{questDescription}" class="form-control col-4 mb-4"/>
     <label class="col-sm-4 col-form-label"><h4>Type:</h4></label>
-    <input type="text" th:field="*{questType}" class="form-control col-4 mb-4"/>
-    <label class="col-sm-4 col-form-label"><h4>Type:</h4></label>
-    <input type="text" th:field="*{reward}" class="form-control col-4 mb-4"/>
+    <select class="form-control col-4 mb-4" th:field="*{questType}">
+      <option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
+    </select>
+    <label class="col-sm-4 col-form-label"><h4>Steps:</h4></label>
+    <input id="stepsInput" type="text" th:field="*{defaultSteps}" value="0" class="form-control col-4 mb-4" readonly/>
+    <label class="col-sm-4 col-form-label"><h4>Reward:</h4></label>
+    <input id="rewardInput" type="text" th:field="*{reward}" class="form-control col-4 mb-4" readonly/>
     <input type="hidden" th:field="*{completed}"/>
+    <input type="hidden" th:field="*{steps}"/>
+    <label class="col-sm-4 col-form-label"><h4>Tier:</h4></label>
+    <select id="tierSelection" class="form-control col-4 mb-4" th:field="*{tier}" onchange="changeSteps()">
+      <option value="1">Tier 1</option>
+      <option th:if="${tierTwoCheck}" value="2" >Tier 2</option>
+      <option th:if="${!tierTwoCheck}" value="0" disabled >Tier 2</option>
+      <option th:if="${tierThreeCheck}" value="3" >Tier 3</option>
+      <option th:if="${!tierThreeCheck}" value="0" disabled>Tier 3</option>
+    </select>
+    <label class="col-sm-4 col-form-label"><h4>Cost:</h4></label>
+    <input id="costInput" type="text" class="form-control col-4 mb-4" readonly/>
+    <br>
     <button type="submit" class="btn btn-success">Save</button>
     <a href="/quests" type="button" class="btn btn-secondary">Back</a>
-
   </form>
 </div>
 </body>

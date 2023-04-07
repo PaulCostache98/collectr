@@ -54,6 +54,7 @@
 <div class="tab">
   <button class="tablinks" onclick="openTab(event, 'accountSummary')" id="defaultOpen">Account Summary</button>
   <button class="tablinks" onclick="openTab(event, 'questHistory')">Quests Status</button>
+  <button class="tablinks" onclick="openTab(event, 'badges')">Badges Status</button>
   <!--    <button class="tablinks" onclick="openTab(event, 'deleteAccount')" th:if="${!userDetails.isAdmin()}">Delete Account</button>-->
 </div>
 <!-- Tab content -->
@@ -66,7 +67,7 @@
 </div>
 
 <div id="questHistory" class="tabcontent">
-  <h3>Quest History</h3>
+  <h3 th:if="${!quests.isEmpty()}">Quest History</h3>
   <p th:each="quest : ${quests}">Completed Quests:
     <span th:text="${quest.getQuestName() + ' - ' + quest.getReward() + '$'}"></span></p>
 
@@ -74,6 +75,12 @@
   <p th:each="activeQuest : ${activeQuests}">
     <span th:text="${activeQuest.getQuestName() + ' - ' + activeQuest.getReward() + '$'}"></span><br>
   <span th:text="${'Steps - ' + activeQuest.getSteps()}"></span></p>
+</div>
+
+<div id="badges" class="tabcontent">
+  <h3>Acquired badges</h3>
+  <p th:each="badge : ${userBadges}">
+    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

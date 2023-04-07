@@ -66,7 +66,9 @@ public class RunAtStartup {
         quest.setQuestDescription("Complete 5 Trivia games successfully.");
         quest.setQuestType("Trivia");
         quest.setReward(50);
-        List<MyUser> completed = new ArrayList<>();
+        quest.setTier(2);
+        quest.setCreatedBy("SYSTEM");
+        List<Long> completed = new ArrayList<>();
         List<Integer> steps = new ArrayList<>();
         steps.add(1);
         quest.setCompleted(completed);
@@ -87,14 +89,29 @@ public class RunAtStartup {
         gameService.saveGame(game);
 
         Game gameTwo = new Game();
-        game.setId(2L);
-        game.setName("Miner");
-        game.setType("Clicker");
-        game.setImgSource("https://cdn-icons-png.flaticon.com/512/8309/8309198.png");
+        gameTwo.setId(2L);
+        gameTwo.setName("Miner");
+        gameTwo.setType("Miner");
+        gameTwo.setImgSource("https://cdn-icons-png.flaticon.com/512/8309/8309198.png");
         gameService.saveGame(gameTwo);
 
+        Quest questTwo = new Quest();
+        questTwo.setId(2L);
+        questTwo.setQuestName("Daily Miner I");
+        questTwo.setQuestDescription("Mine 5 rocks.");
+        questTwo.setQuestType("Miner");
+        questTwo.setReward(10);
+        questTwo.setTier(1);
+        questTwo.setCreatedBy("SYSTEM");
+        List<Long> completedTwo = new ArrayList<>();
+        List<Integer> stepsTwo = new ArrayList<>();
+        stepsTwo.add(1);
+        questTwo.setCompleted(completedTwo);
+        questTwo.setSteps(stepsTwo);
+        questService.saveQuest(questTwo);
 
-        myUser.setQuests(Set.of(quest));
+
+        myUser.setQuests(Set.of(quest, questTwo));
         myUser.setBadges(Set.of(badge));
         quest.setUsers(List.of(myUser));
         badge.setUsers(Set.of(myUser));

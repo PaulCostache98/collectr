@@ -3,6 +3,8 @@ package com.gamification.collectr.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.gamification.collectr.converter.IntegerListConverter;
+import com.gamification.collectr.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,10 +36,21 @@ public class Quest {
     private String questType;
 
     @Column
+    @Convert(converter = IntegerListConverter.class)
     private List<Integer> steps;
 
     @Column
-    private List<MyUser> completed;
+    private Integer defaultSteps;
+
+    @Column
+    private Integer tier;
+
+    @Column
+    private String createdBy;
+
+    @Column
+    @Convert(converter = LongListConverter.class)
+    private List<Long> completed;
 
     @Column(name = "reward", nullable = false)
     private Integer reward;
@@ -56,6 +69,9 @@ public class Quest {
         this.users = quest.getUsers();
         this.reward = quest.getReward();
         this.steps = quest.getSteps();
+        this.defaultSteps = quest.getDefaultSteps();
+        this.tier = quest.getTier();
+        this.createdBy = quest.getCreatedBy();
     }
 
 

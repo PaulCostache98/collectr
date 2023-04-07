@@ -25,6 +25,8 @@ public class LeaderboardController {
         users.sort(byScore);
 
         model.addAttribute("users", users);
+        model.addAttribute("user", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
+        model.addAttribute("userTokens", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserTokens());
 
         return "leaderboard";
     }

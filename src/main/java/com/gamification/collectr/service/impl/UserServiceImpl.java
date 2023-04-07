@@ -1,5 +1,6 @@
 package com.gamification.collectr.service.impl;
 
+import com.gamification.collectr.repository.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,11 +36,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     EmailSender emailSender;
+    private final BadgeRepository badgeRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           BadgeRepository badgeRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.badgeRepository = badgeRepository;
     }
 
     public MyUser findUserByEmail(String email) {

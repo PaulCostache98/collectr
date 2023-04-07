@@ -61,6 +61,9 @@ public class TriviaController {
 
         if(count == 5) {
             count = 1;
+            if(Objects.equals(answers.get(number), correctAnswer)) {
+                correctCount++;
+            }
             return "redirect:/games/1/end";
         }
 
@@ -93,7 +96,7 @@ public class TriviaController {
             MyUser user = userService.findUserByUserName(authentication.getName());
             if(!user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Trivia") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user))).toList().isEmpty())
             {
-                List<Quest> questsTemp = user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Trivia") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user))).toList();
+                List<Quest> questsTemp = user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Trivia") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user.getId()))).toList();
                 questsTemp.forEach(user.getQuests()::remove);
                 List<List<Integer>> stepsTemp = questsTemp.stream().map(Quest::getSteps).toList();
                 questsTemp.forEach(q -> q.getSteps().set(q.getUsers().indexOf(user), q.getSteps().get(q.getUsers().indexOf(user))-1));
@@ -101,8 +104,8 @@ public class TriviaController {
                     if(q.getSteps().get(q.getUsers().indexOf(user)) <= 0)
                     {
                         q.getSteps().set(q.getUsers().indexOf(user), 0);
-                        q.getCompleted().add(user);
-
+                        q.getCompleted().add(user.getId());
+                        user.setUserTokens(user.getUserTokens()+q.getReward());
                     }
                 }
                 user.getQuests().addAll(questsTemp);
