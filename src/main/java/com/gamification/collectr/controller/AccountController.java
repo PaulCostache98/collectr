@@ -1,5 +1,6 @@
 package com.gamification.collectr.controller;
 
+import com.gamification.collectr.entity.Badge;
 import com.gamification.collectr.entity.Game;
 import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
@@ -27,6 +28,9 @@ public class AccountController {
     @Autowired
     GameService gameService;
 
+    @Autowired
+    BadgeService badgeService;
+
     @RequestMapping("/account")
     public String account(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -40,6 +44,8 @@ public class AccountController {
         }
         Set<Quest> activeQuests = new HashSet<>(user.getQuests());
         activeQuests.removeAll(quests);
+        List<Badge> ongoingBadges = badgeService.findAll();
+        ongoingBadges = ongoingBadges.stream().filter(b -> !b.getUsers().contains(user)).toList();
 //        List<String> badgeGames = new ArrayList<>(gameService.findAll().stream().filter(g -> !g.getBadges().stream().filter(b -> b.getUsers().contains(user)).toList().isEmpty()).toList()
 //                .stream().map(Game::getName).toList());
 
@@ -49,6 +55,7 @@ public class AccountController {
         model.addAttribute("userDetails", user);
         model.addAttribute("userTokens", user.getUserTokens());
         model.addAttribute("userBadges", user.getBadges());
+        model.addAttribute("ongoingBadges", ongoingBadges);
 
         return "account";
     }

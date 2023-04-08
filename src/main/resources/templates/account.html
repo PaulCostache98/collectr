@@ -81,6 +81,10 @@
   <h3>Acquired badges</h3>
   <p th:each="badge : ${userBadges}">
     <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
+  <h3>Badge progress</h3>
+  <p th:each="badge : ${ongoingBadges}">
+    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
+    <span th:text="${'Steps remaining: ' + (badge.getDefaultSteps() - badge.getSteps())}"></span>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

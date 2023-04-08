@@ -7,10 +7,9 @@ import com.gamification.collectr.converter.IntegerListConverter;
 import com.gamification.collectr.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.collections4.list.SetUniqueList;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -36,7 +35,7 @@ public class Quest {
     private String questType;
 
     @Column
-    @Convert(converter = IntegerListConverter.class)
+//    @Convert(converter = IntegerListConverter.class)
     private List<Integer> steps;
 
     @Column
@@ -49,16 +48,16 @@ public class Quest {
     private String createdBy;
 
     @Column
-    @Convert(converter = LongListConverter.class)
+//    @Convert(converter = LongListConverter.class)
     private List<Long> completed;
 
     @Column(name = "reward", nullable = false)
     private Integer reward;
 
-    @ManyToMany(mappedBy = "quests")
+    @ManyToMany(mappedBy = "quests", fetch=FetchType.EAGER)
     @JsonIgnore
     @ToString.Exclude
-    private List<MyUser> users;
+    private LinkedHashSet<MyUser> users;
 
     public Quest(Quest quest) {
         this.id = quest.getId();
@@ -75,5 +74,16 @@ public class Quest {
     }
 
 
+    public List<Long> getCompleted() {
+        if(completed == null) {
+            return new ArrayList<Long>();
+        }
+        return completed;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    public void setUsers(Set<MyUser> users) {
+        this.users = users;
+    }
 
 }

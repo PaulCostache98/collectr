@@ -21,7 +21,7 @@ public class LeaderboardController {
     public String questsPage(Model model) {
         List<MyUser> users = userService.findAll();
 
-        Comparator<MyUser> byScore = Comparator.comparing(MyUser::getLeaderboardScore);
+        Comparator<MyUser> byScore = Comparator.comparing(MyUser::getLeaderboardScore).reversed();
         users.sort(byScore);
 
         model.addAttribute("users", users);

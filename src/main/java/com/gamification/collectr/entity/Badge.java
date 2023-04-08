@@ -37,12 +37,20 @@ public class Badge {
     @JoinColumn(name = "game_id")
     private Game game;
 
+    @Column
+    private Integer steps;
+
+    @Column
+    private Integer defaultSteps;
+
     public Badge(Badge badge) {
         this.id = badge.getId();
         this.badgeName = badge.getBadgeName();
         this.users = badge.getUsers();
         this.imgSource = badge.getImgSource();
         this.game = badge.getGame();
+        this.steps = badge.getSteps();
+        this.defaultSteps = badge.getDefaultSteps();
     }
 
 

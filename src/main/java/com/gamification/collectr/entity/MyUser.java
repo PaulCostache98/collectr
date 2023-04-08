@@ -9,10 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -84,7 +81,7 @@ public class MyUser implements UserDetails {
     @JoinTable(name = "users_quests",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "quest_id", referencedColumnName = "quest_id"))
-    private Set<Quest> quests = new HashSet<>();
+    private Set<Quest> quests = new LinkedHashSet<>();
 
     @Column
     private Integer leaderboardScore;

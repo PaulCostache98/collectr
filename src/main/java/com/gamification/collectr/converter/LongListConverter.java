@@ -13,18 +13,23 @@ public class LongListConverter implements AttributeConverter<List<Long>, String>
     @Override
     public String convertToDatabaseColumn(List<Long> list) {
         if(list.isEmpty()) {
-            return " ";
+            return "";
         }
         if(list.size() == 1) {
-            return String.valueOf(list.toString().charAt(1));
+            return String.valueOf(list.get(0));
         }
-        return String.join(",", list.toString());
+        StringBuilder stringTemp = new StringBuilder();
+        for (Long aLong : list) {
+            stringTemp.append(" ");
+            stringTemp.append(aLong);
+        }
+        return stringTemp.toString();
 
     }
 
     @Override
     public List<Long> convertToEntityAttribute(String joined) {
-        if(joined.equals(" ")) {
+        if(joined.equals("")) {
             return new ArrayList<>();
         }
         if(joined.length() == 1) {

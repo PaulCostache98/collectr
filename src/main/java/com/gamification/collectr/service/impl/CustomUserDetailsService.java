@@ -26,9 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 //    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         MyUser myUser = userService.findUserByUserName(username);
-        List<GrantedAuthority> authorities = getUserAuthority(myUser.getRoles());
-        return new MyUser(myUser.getUsername(), myUser.getPassword(),
-                myUser.isEnabled(), myUser.isAccountNonExpired(), myUser.isCredentialsNonExpired(), myUser.isAccountNonLocked(), authorities);
+        if(myUser != null) {
+            List<GrantedAuthority> authorities = getUserAuthority(myUser.getRoles());
+            return new MyUser(myUser.getUsername(), myUser.getPassword(),
+                    myUser.isEnabled(), myUser.isAccountNonExpired(), myUser.isCredentialsNonExpired(), myUser.isAccountNonLocked(), authorities);
+        }
+        return new MyUser();
     }
 
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {

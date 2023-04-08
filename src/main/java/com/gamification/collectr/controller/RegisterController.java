@@ -41,6 +41,7 @@ public class RegisterController {
         if (user.getPassword().equals(user.getPasswordConfirm())) {
             request.getSession();
             user.setRoles(Collections.singleton(new Role("ROLE_USER")));
+            user.setUserTokens(10);
             userService.saveUser(user);
             return "register-success";
         } else {

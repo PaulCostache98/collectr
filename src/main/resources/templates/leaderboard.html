@@ -17,6 +17,8 @@
   <div th:each="user : ${users}">
     <p th:text="${'User Name: ' + user.getFullName()}"></p>
     <p th:text="${'User Score: ' + user.getLeaderboardScore()}"></p>
+    <p th:text="${'Badges: ' + user.getBadges().size()}"></p>
+    <p th:text="${'Tokens: ' + user.getUserTokens()}"></p>
     <p th:text="${'Place: ' + (users.indexOf(user)+1)}"></p>
   </div>
 

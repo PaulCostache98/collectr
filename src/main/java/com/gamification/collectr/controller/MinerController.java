@@ -34,11 +34,11 @@ public class MinerController {
             currentMessage = "You have finished mining the rock.";
             List<Quest> questsTemp = user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Miner") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user.getId()))).toList();
             questsTemp.forEach(user.getQuests()::remove);
-            questsTemp.forEach(q -> q.getSteps().set(q.getUsers().indexOf(user), q.getSteps().get(q.getUsers().indexOf(user))-1));
+            questsTemp.forEach(q -> q.getSteps().set(q.getUsers().stream().toList().indexOf(user), q.getSteps().get(q.getUsers().stream().toList().indexOf(user))-1));
             for (Quest q: questsTemp) {
-                if(q.getSteps().get(q.getUsers().indexOf(user)) <= 0)
+                if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) <= 0)
                 {
-                    q.getSteps().set(q.getUsers().indexOf(user), 0);
+                    q.getSteps().set(q.getUsers().stream().toList().indexOf(user), 0);
                     q.getCompleted().add(user.getId());
                     user.setUserTokens(user.getUserTokens()+q.getReward());
                 }

@@ -1,8 +1,11 @@
 package com.gamification.collectr.controller;
 
+import com.gamification.collectr.entity.Badge;
 import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
+import com.gamification.collectr.service.BadgeService;
 import com.gamification.collectr.games.Question;
+import com.gamification.collectr.service.QuestService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,6 +33,12 @@ public class TriviaController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    QuestService questService;
+
+    @Autowired
+    BadgeService badgeService;
 
 
     @RequestMapping("games/1")
@@ -94,25 +103,31 @@ public class TriviaController {
         if(correctCount >= 3) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             MyUser user = userService.findUserByUserName(authentication.getName());
-            if(!user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Trivia") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user))).toList().isEmpty())
+            List<Quest> quests = questService.findAll().stream().filter(q -> q.getQuestType().equals("Trivia") && !q.getCompleted().contains(user.getId())).toList();
+            quests = quests.stream().filter(q -> !q.getCompleted().contains(user.getId())).toList();
+            if(!quests.isEmpty())
             {
-                List<Quest> questsTemp = user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Trivia") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user.getId()))).toList();
-                questsTemp.forEach(user.getQuests()::remove);
-                List<List<Integer>> stepsTemp = questsTemp.stream().map(Quest::getSteps).toList();
-                questsTemp.forEach(q -> q.getSteps().set(q.getUsers().indexOf(user), q.getSteps().get(q.getUsers().indexOf(user))-1));
-                for (Quest q: questsTemp) {
-                    if(q.getSteps().get(q.getUsers().indexOf(user)) <= 0)
+                quests.forEach(user.getQuests()::remove);
+                quests.forEach(q -> q.getSteps().set(q.getUsers().stream().toList().indexOf(user), q.getSteps().get(q.getUsers().stream().toList().indexOf(user))-1));
+                for (Quest q: quests) {
+                    if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) == 0)
                     {
-                        q.getSteps().set(q.getUsers().indexOf(user), 0);
+                        q.getSteps().set(q.getUsers().stream().toList().indexOf(user), -1);
                         q.getCompleted().add(user.getId());
                         user.setUserTokens(user.getUserTokens()+q.getReward());
+                        questService.saveQuest(q);
+                        List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> b.getGame().getType().equals(q.getQuestType())).toList();
+                        badgeTemp.forEach(b -> b.setSteps(b.getSteps()+1));
+                        List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps(), b.getDefaultSteps())).toList();
+                        user.getBadges().addAll(badgeCompleted);
                     }
                 }
-                user.getQuests().addAll(questsTemp);
+                user.getQuests().addAll(quests);
                 userService.saveUser(user);
             }
+            correctCount=0;
         }
-        correctCount=0;
+
         return "trivia-end";
     }
 
