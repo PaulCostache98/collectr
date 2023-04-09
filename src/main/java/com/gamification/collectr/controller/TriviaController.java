@@ -116,7 +116,7 @@ public class TriviaController {
                         q.getCompleted().add(user.getId());
                         user.setUserTokens(user.getUserTokens()+q.getReward());
                         questService.saveQuest(q);
-                        List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> b.getGame().getType().equals(q.getQuestType())).toList();
+                        List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
                         badgeTemp.forEach(b -> b.setSteps(b.getSteps()+1));
                         List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps(), b.getDefaultSteps())).toList();
                         user.getBadges().addAll(badgeCompleted);

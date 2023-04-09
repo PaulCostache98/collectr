@@ -43,6 +43,9 @@ public class Badge {
     @Column
     private Integer defaultSteps;
 
+    @Column
+    private Integer cost;
+
     public Badge(Badge badge) {
         this.id = badge.getId();
         this.badgeName = badge.getBadgeName();
@@ -51,6 +54,7 @@ public class Badge {
         this.game = badge.getGame();
         this.steps = badge.getSteps();
         this.defaultSteps = badge.getDefaultSteps();
+        this.cost = badge.getCost();
     }
 
 

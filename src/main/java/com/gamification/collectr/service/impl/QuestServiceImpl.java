@@ -1,5 +1,6 @@
 package com.gamification.collectr.service.impl;
 
+import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
 import com.gamification.collectr.exception.QuestNotFoundException;
 import com.gamification.collectr.repository.QuestRepository;
@@ -7,6 +8,7 @@ import com.gamification.collectr.service.QuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -48,7 +48,6 @@ public class AccountController {
         ongoingBadges = ongoingBadges.stream().filter(b -> !b.getUsers().contains(user)).toList();
 //        List<String> badgeGames = new ArrayList<>(gameService.findAll().stream().filter(g -> !g.getBadges().stream().filter(b -> b.getUsers().contains(user)).toList().isEmpty()).toList()
 //                .stream().map(Game::getName).toList());
-
         model.addAttribute("quests", quests);
         model.addAttribute("activeQuests", activeQuests);
         model.addAttribute("user", user.getFullName());

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:class="http://www.w3.org/1999/xhtml">
 <head>
-  <title>PC Shop</title>
+  <title>collectR</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -74,17 +74,19 @@
   <h3>Active Quests</h3>
   <p th:each="activeQuest : ${activeQuests}">
     <span th:text="${activeQuest.getQuestName() + ' - ' + activeQuest.getReward() + '$'}"></span><br>
-  <span th:text="${'Steps - ' + activeQuest.getSteps()}"></span></p>
+  <span th:text="${'Steps - ' + activeQuest.getSteps().get(userDetails.getId()-1)}"></span></p>
 </div>
 
 <div id="badges" class="tabcontent">
   <h3>Acquired badges</h3>
   <p th:each="badge : ${userBadges}">
-    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
+    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName()}"></span><br>
   <h3>Badge progress</h3>
   <p th:each="badge : ${ongoingBadges}">
-    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
-    <span th:text="${'Steps remaining: ' + (badge.getDefaultSteps() - badge.getSteps())}"></span>
+    <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:if="${badge.getGame() != null}"th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span>
+    <span th:if="${badge.getGame() == null}"th:text="${badge.getBadgeName() + ' - Not Owned'}"></span>
+    <br>
+    <span th:if="${(badge.getDefaultSteps() - badge.getSteps()) != -1}" th:text="${'Steps remaining: ' + (badge.getDefaultSteps() - badge.getSteps())}"></span>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

@@ -57,8 +57,9 @@
 </div>
 <!-- Tab content -->
 <div id="questListings" class="tabcontent">
-    <a href="/create-quest" type="button"
+    <a href="/create-quest" type="button" th:if="${userDetails.getUserTokens()>=50 && userDetails.getBadges().size()>=3}"
        class="btn btn-primary btn-sm">Create Custom Quest</a><br>
+    <span th:if="${userDetails.getUserTokens()<50 || userDetails.getBadges.size()<3}"> For a user to create a Quest, they'll need at least 50 tokens and 3 badges earned.</span>
     <h3 th:if="${!quests.isEmpty()}">Listed Quests</h3>
     <div th:each="quest : ${quests}">
         <span th:text="${'Name: ' + quest.getQuestName()}"></span><br>
@@ -85,9 +86,16 @@
 </div>
 
 <div id="badges" class="tabcontent">
-    <h3>Acquired badges</h3>
-    <p th:each="badge : ${badges}">
-        <img th:src="${badge.getImgSource()}" width="20" height="20"><span th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
+    <h3>All Badges</h3>
+    <div th:each="badge : ${gameBadges}">
+        <img th:src="${badge.getImgSource()}" width="20" height="20"><span  th:text="${badge.getBadgeName() + ' - ' + badge.getGame().getName()}"></span><br>
+        <span th:if="${userDetails.getBadges().contains(badge)}">Completed</span>
+        </div>
+    <div th:each="badge : ${wealthBadges}">
+        <img th:src="${badge.getImgSource()}" width="20" height="20">
+        <span th:text="${badge.getBadgeName()}"></span><br>
+        <a th:if="${userDetails.getUserTokens() >= badge.getCost()}" th:text="${'Buy Now - ' + badge.getCost()}" th:href="@{/badges/buy/{id}(id=${badge.getId()})}"></a>
+    </div>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

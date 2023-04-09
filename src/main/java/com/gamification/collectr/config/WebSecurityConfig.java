@@ -20,7 +20,7 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .anonymous()
                 .and()
-                .authorizeHttpRequests().requestMatchers( "/", "/error", "/index", "/shop", "/towers", "/about", "/towers/**", "/users/postman", "/login", "/register", "/activation/**", "/activation-success").permitAll()
+                .authorizeHttpRequests().requestMatchers( "/", "/error", "/index", "/users/postman", "/login", "/register", "/activation/**", "/activation-success").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

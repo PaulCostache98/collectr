@@ -12,12 +12,13 @@ import com.gamification.collectr.service.QuestService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RunAtStartup {
@@ -88,8 +89,7 @@ public class RunAtStartup {
         quest.setDefaultSteps(10);
         quest.setCreatedBy("SYSTEM");
         List<Long> completed = new ArrayList<>();
-        List<Integer> steps = new ArrayList<>();
-        steps.add(1);
+        List<Integer> steps = new ArrayList<>(List.of(1, -1));
         quest.setCompleted(completed);
         quest.setSteps(steps);
 //        questService.saveQuest(quest);
@@ -109,6 +109,24 @@ public class RunAtStartup {
         badgeTwo.setDefaultSteps(5);
         badgeTwo.setImgSource("https://w7.pngwing.com/pngs/919/532/png-transparent-bronze-medal-bronze-medal-gold-medal-medal-medal-gold-material-thumbnail.png");
         badgeService.saveBadge(badgeTwo);
+
+        Badge badgeTokenTierOne = new Badge();
+        badgeTokenTierOne.setBadgeName("Wealth Badge - Tier I");
+        badgeTokenTierOne.setId(3L);
+        badgeTokenTierOne.setSteps(0);
+        badgeTokenTierOne.setCost(100);
+        badgeTokenTierOne.setDefaultSteps(-1);
+        badgeTokenTierOne.setImgSource("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIn7VZ3rkdURXL8ahGcueKzZlKOzuGix1aryunqaOx4VfpqZ9n2NEINhNseAb5-DFlnnA&usqp=CAU");
+        badgeService.saveBadge(badgeTokenTierOne);
+
+        Badge badgeTokenTierTwo = new Badge();
+        badgeTokenTierTwo.setBadgeName("Wealth Badge - Tier II");
+        badgeTokenTierTwo.setId(4L);
+        badgeTokenTierTwo.setSteps(0);
+        badgeTokenTierTwo.setDefaultSteps(-1);
+        badgeTokenTierTwo.setCost(200);
+        badgeTokenTierTwo.setImgSource("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIn7VZ3rkdURXL8ahGcueKzZlKOzuGix1aryunqaOx4VfpqZ9n2NEINhNseAb5-DFlnnA&usqp=CAU");
+        badgeService.saveBadge(badgeTokenTierTwo);
 
 
         Game game = new Game();
@@ -133,20 +151,23 @@ public class RunAtStartup {
         questTwo.setReward(10);
         questTwo.setTier(1);
         questTwo.setDefaultSteps(5);
-        questTwo.setCompleted(List.of(1L));
+        questTwo.setCompleted(new ArrayList<>());
         questTwo.setCreatedBy("SYSTEM");
-        List<Integer> stepsTwo = new ArrayList<>();
-        stepsTwo.add(1);
+        List<Integer> stepsTwo = new ArrayList<>(List.of(1, -1));
         questTwo.setSteps(stepsTwo);
 
         questService.saveQuest(quest);
-        myUser.setQuests(Set.of(quest));
+        questService.saveQuest(questTwo);
+        myUser.setQuests(Set.of(quest, questTwo));
         myUser.setBadges(Set.of(badge));
         userService.saveUser(myUser);
-        quest.getUsers().add(myUser);
+        Set<MyUser> users = new HashSet<>();
+        users.add(myUser);
+        quest.setUsers(users);
+        questTwo.setUsers(users);
         badge.setUsers(Set.of(myUser));
-        userService.updateUser(myUser);
-        questService.updateQuest(quest);
+        userService.saveUser(myUser);
+        questService.saveQuest(quest);
         game.setBadges(Set.of(badge));
         badge.setGame(game);
         badgeTwo.setGame(gameTwo);
@@ -154,8 +175,21 @@ public class RunAtStartup {
         badgeService.saveBadge(badgeTwo);
         questService.saveQuest(questTwo);
         badgeService.saveBadge(badge);
+        badgeService.saveBadge(badgeTokenTierOne);
+        badgeService.saveBadge(badgeTokenTierTwo);
         userService.saveUser(myUserTwo);
 
 
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                List<MyUser> userTemp = userService.findAll();
+                userTemp = userTemp.stream().filter(u -> !u.getQuests().isEmpty()).toList();
+                Set<Quest> questTemp = new HashSet<>();
+                userTemp.forEach(u -> questTemp.addAll(u.getQuests()));
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 500, 10000);
     }
 }

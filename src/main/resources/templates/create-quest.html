@@ -48,16 +48,15 @@
 
 </head>
 <body>
-<div th:replace="fragments/navbar.html :: topnav"></div>
 <div class="container-fluid text-center">
   <div class="text-center"><h1>Create a Custom Quest</h1></div>
 
   <form action="#" th:action="@{/create-quest}" th:object="${quest}" method="post">
     <input type="hidden" th:field="*{id}"/>
     <label class="col-sm-4 col-form-label"><h4>Name:</h4></label>
-    <input type="text" th:field="*{questName}" class="form-control col-4 mb-4"/>
+    <input type="text" th:field="*{questName}" class="form-control col-4 mb-4" required/>
     <label class="col-sm-4 col-form-label"><h4>Description:</h4></label>
-    <input type="text" th:field="*{questDescription}" class="form-control col-4 mb-4"/>
+    <input type="text" th:field="*{questDescription}" class="form-control col-4 mb-4" required/>
     <label class="col-sm-4 col-form-label"><h4>Type:</h4></label>
     <select class="form-control col-4 mb-4" th:field="*{questType}">
       <option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
@@ -80,7 +79,7 @@
     <input id="costInput" type="text" class="form-control col-4 mb-4" readonly/>
     <br>
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="/quests" type="button" class="btn btn-secondary">Back</a>
+    <a href="/shop" type="button" class="btn btn-secondary">Back</a>
   </form>
 </div>
 </body>

@@ -3,12 +3,13 @@ package com.gamification.collectr.controller;
 import com.gamification.collectr.entity.Badge;
 import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
+import com.gamification.collectr.exception.BadgeNotFoundException;
 import com.gamification.collectr.exception.QuestNotFoundException;
 import com.gamification.collectr.service.BadgeService;
+import com.gamification.collectr.service.GameService;
 import com.gamification.collectr.service.QuestService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
-public class QuestsController {
+public class ShopController {
 
     @Autowired
     QuestService questService;
@@ -31,16 +32,22 @@ public class QuestsController {
     @Autowired
     BadgeService badgeService;
 
-    @RequestMapping("/quests")
+    @Autowired
+    GameService gameService;
+
+    @RequestMapping("/shop")
     public String questsPage(Model model) {
         List<Quest> quests = questService.findAll();
-        List<Badge> badges = badgeService.findAll();
+        List<Badge> gameBadges = badgeService.findAll().stream().filter(b -> !gameService.findAll().stream().filter(g -> g.getBadges().contains(b)).toList().isEmpty()).toList();
+        List<Badge> wealthBadges = badgeService.findAll().stream().filter(b -> gameService.findAll().stream().filter(g -> g.getBadges().contains(b)).toList().isEmpty()).toList();
+
         model.addAttribute("quests", quests);
-        model.addAttribute("badges", badges);
+        model.addAttribute("gameBadges", gameBadges);
+        model.addAttribute("wealthBadges", wealthBadges);
         model.addAttribute("userDetails", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         model.addAttribute("user", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
         model.addAttribute("userTokens", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserTokens());
-        return "quests";
+        return "shop";
     }
 
     @RequestMapping("/quests/buy/{id}")
@@ -54,20 +61,39 @@ public class QuestsController {
         }
         MyUser user = userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setUserTokens(user.getUserTokens() - price);
-        quest.getSteps().add(quest.getDefaultSteps());
+        quest.getSteps().set((int) (user.getId()-1), quest.getDefaultSteps());
         user.getQuests().add(quest);
         List<MyUser> users = userService.findAll();
         for (MyUser userTemp : users) {
             if(quest.getCreatedBy().equals(userTemp.getFullName())) {
                 userTemp.setUserTokens(userTemp.getUserTokens()+price);
-                userService.updateUser(userTemp);
+                userService.saveUser(userTemp);
             }
         }
-        userService.updateUser(user);
-        quest.getUsers().add(user);
-        questService.updateQuest(quest);
+        userService.saveUser(user);
+        Set<MyUser> userTemp;
+        userTemp = quest.getUsers();
+        userTemp.add(user);
+        quest.setUsers(userTemp);
+        questService.saveQuest(quest);
 
-        return "redirect:/quests";
+        return "redirect:/shop";
+    }
+
+    @RequestMapping("/badges/buy/{id}")
+    public String buyBadge(@PathVariable Integer id, Model model) throws BadgeNotFoundException {
+        Badge badge = badgeService.findById((long) id);
+        MyUser user = userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.setUserTokens(user.getUserTokens() - badge.getCost());
+        user.getBadges().add(badge);
+        userService.saveUser(user);
+        Set<MyUser> userTemp;
+        userTemp = badge.getUsers();
+        userTemp.add(user);
+        badge.setUsers(userTemp);
+        badgeService.saveBadge(badge);
+
+        return "redirect:/shop";
     }
 
     @GetMapping("/create-quest")
@@ -101,9 +127,12 @@ public class QuestsController {
             case 2 -> user.setUserTokens(user.getUserTokens() - 100);
             case 3 -> user.setUserTokens(user.getUserTokens() - 150);
         }
-        userService.updateUser(user);
-        questService.updateQuest(quest);
-        return "redirect:/quests";
+        for(int i = 0;i<userService.findAll().size();i++) {
+            quest.getSteps().add(-1);
+        }
+        userService.saveUser(user);
+        questService.saveQuest(quest);
+        return "redirect:/shop";
     }
 
 }

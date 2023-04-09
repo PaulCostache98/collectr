@@ -54,10 +54,10 @@ public class Quest {
     @Column(name = "reward", nullable = false)
     private Integer reward;
 
-    @ManyToMany(mappedBy = "quests", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "quests", fetch = FetchType.EAGER)
     @JsonIgnore
     @ToString.Exclude
-    private LinkedHashSet<MyUser> users;
+    private Set<MyUser> users;
 
     public Quest(Quest quest) {
         this.id = quest.getId();
@@ -81,9 +81,22 @@ public class Quest {
         return completed;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    public HashSet<MyUser> getUsers() {
+        List<MyUser> userTemp = new ArrayList<>();
+        if(this.users != null) {
+            userTemp.addAll(List.copyOf(this.users));
+        }
+        if(this.users == null) {
+            return new HashSet<MyUser>();
+        }
+        userTemp.sort(Comparator.comparing(MyUser::getId));
+        return new HashSet<>(userTemp);
+    }
+
     public void setUsers(Set<MyUser> users) {
-        this.users = users;
+        List<MyUser> userTemp = new ArrayList<>(List.copyOf(users));
+        userTemp.sort(Comparator.comparing(MyUser::getId));
+        this.users = new HashSet<>(userTemp);
     }
 
 }

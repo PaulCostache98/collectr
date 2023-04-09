@@ -22,10 +22,7 @@
                     <li sec:authorize="isAuthenticated()"><a  href="/index">Home</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
-                    <li sec:authorize="isAuthenticated()"><a href="/quests">Quest List</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin-page">Admin Page</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/shop">Quest & Badge Shop</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
                     <li sec:authorize="isAuthenticated()"><a href="/games">Games - Complete Quests!</a></li>

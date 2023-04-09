@@ -1,7 +1,9 @@
 package com.gamification.collectr.controller;
 
+import com.gamification.collectr.entity.Badge;
 import com.gamification.collectr.entity.MyUser;
 import com.gamification.collectr.entity.Quest;
+import com.gamification.collectr.service.BadgeService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,9 @@ public class MinerController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    BadgeService badgeService;
 
     int clickCount = 0;
 
@@ -38,9 +43,13 @@ public class MinerController {
             for (Quest q: questsTemp) {
                 if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) <= 0)
                 {
-                    q.getSteps().set(q.getUsers().stream().toList().indexOf(user), 0);
+                    q.getSteps().set(q.getUsers().stream().toList().indexOf(user), -1);
                     q.getCompleted().add(user.getId());
                     user.setUserTokens(user.getUserTokens()+q.getReward());
+                    List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
+                    badgeTemp.forEach(b -> b.setSteps(b.getSteps()+1));
+                    List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps(), b.getDefaultSteps())).toList();
+                    user.getBadges().addAll(badgeCompleted);
                 }
             }
             user.getQuests().addAll(questsTemp);

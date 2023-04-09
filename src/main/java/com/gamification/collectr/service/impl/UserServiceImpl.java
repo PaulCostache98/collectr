@@ -80,6 +80,9 @@ public class UserServiceImpl implements UserService {
     public MyUser saveUser(MyUser receivedUser) {
         MyUser myUser = new MyUser(receivedUser);
         myUser.setPassword(new BCryptPasswordEncoder().encode(receivedUser.getPassword()));
+        if(userRepository.findByUsernameIgnoreCase(myUser.getUsername()) != null) {
+            myUser.setPassword(userRepository.findByUsernameIgnoreCase(myUser.getUsername()).getPassword());
+        }
         myUser.setRandomToken(UUID.randomUUID().toString());
         emailSender.sendEmail(myUser.getEmail(), "Activate your Account", emailBodyService.emailBody(myUser));
         receivedUser.getRoles().forEach(role -> {
@@ -95,6 +98,8 @@ public class UserServiceImpl implements UserService {
 
     public void updateUser(MyUser user) {
         List<GrantedAuthority> actualAuthorities = getUserAuthority(user.getRoles());
+
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), actualAuthorities);
 
