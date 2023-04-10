@@ -16,9 +16,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class RunAtStartup {
@@ -84,7 +81,7 @@ public class RunAtStartup {
         quest.setQuestName("Daily Trivia I");
         quest.setQuestDescription("Complete 5 Trivia games successfully.");
         quest.setQuestType("Trivia");
-        quest.setReward(50);
+        quest.setReward(75);
         quest.setTier(2);
         quest.setDefaultSteps(10);
         quest.setCreatedBy("SYSTEM");
@@ -97,7 +94,8 @@ public class RunAtStartup {
         Badge badge = new Badge();
         badge.setBadgeName("Trivia Master Bronze");
         badge.setId(1L);
-        badge.setSteps(0);
+        List<Integer> badgeSteps = new ArrayList<>(List.of(0, 0));
+        badge.setSteps(badgeSteps);
         badge.setDefaultSteps(5);
         badge.setImgSource("https://w7.pngwing.com/pngs/919/532/png-transparent-bronze-medal-bronze-medal-gold-medal-medal-medal-gold-material-thumbnail.png");
         badgeService.saveBadge(badge);
@@ -105,7 +103,7 @@ public class RunAtStartup {
         Badge badgeTwo = new Badge();
         badgeTwo.setBadgeName("Mining Master Bronze");
         badgeTwo.setId(2L);
-        badgeTwo.setSteps(0);
+        badgeTwo.setSteps(badgeSteps);
         badgeTwo.setDefaultSteps(5);
         badgeTwo.setImgSource("https://w7.pngwing.com/pngs/919/532/png-transparent-bronze-medal-bronze-medal-gold-medal-medal-medal-gold-material-thumbnail.png");
         badgeService.saveBadge(badgeTwo);
@@ -113,7 +111,7 @@ public class RunAtStartup {
         Badge badgeTokenTierOne = new Badge();
         badgeTokenTierOne.setBadgeName("Wealth Badge - Tier I");
         badgeTokenTierOne.setId(3L);
-        badgeTokenTierOne.setSteps(0);
+        badgeTokenTierOne.setSteps(badgeSteps);
         badgeTokenTierOne.setCost(100);
         badgeTokenTierOne.setDefaultSteps(-1);
         badgeTokenTierOne.setImgSource("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIn7VZ3rkdURXL8ahGcueKzZlKOzuGix1aryunqaOx4VfpqZ9n2NEINhNseAb5-DFlnnA&usqp=CAU");
@@ -122,7 +120,7 @@ public class RunAtStartup {
         Badge badgeTokenTierTwo = new Badge();
         badgeTokenTierTwo.setBadgeName("Wealth Badge - Tier II");
         badgeTokenTierTwo.setId(4L);
-        badgeTokenTierTwo.setSteps(0);
+        badgeTokenTierTwo.setSteps(badgeSteps);
         badgeTokenTierTwo.setDefaultSteps(-1);
         badgeTokenTierTwo.setCost(200);
         badgeTokenTierTwo.setImgSource("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIn7VZ3rkdURXL8ahGcueKzZlKOzuGix1aryunqaOx4VfpqZ9n2NEINhNseAb5-DFlnnA&usqp=CAU");
@@ -148,7 +146,7 @@ public class RunAtStartup {
         questTwo.setQuestName("Daily Miner I");
         questTwo.setQuestDescription("Mine 5 rocks.");
         questTwo.setQuestType("Miner");
-        questTwo.setReward(10);
+        questTwo.setReward(15);
         questTwo.setTier(1);
         questTwo.setDefaultSteps(5);
         questTwo.setCompleted(new ArrayList<>());
@@ -187,9 +185,14 @@ public class RunAtStartup {
                 List<MyUser> userTemp = userService.findAll();
                 userTemp = userTemp.stream().filter(u -> !u.getQuests().isEmpty()).toList();
                 Set<Quest> questTemp = new HashSet<>();
-                userTemp.forEach(u -> questTemp.addAll(u.getQuests()));
+                userTemp.forEach(u -> questTemp.addAll(u.getQuests().stream().filter(q -> q.getCreatedBy().equals("SYSTEM")).toList()));
+                userTemp.forEach(u -> u.getQuests().removeAll(questTemp));
+                questTemp.forEach(q -> q.getUsers().clear());
+                questTemp.forEach(q -> q.getCompleted().clear());
+                questTemp.forEach(q -> questService.saveQuest(q));
+                userTemp.forEach(u -> userService.saveUser(u));
             }
         };
-        timer.scheduleAtFixedRate(timerTask, 500, 10000);
+        timer.scheduleAtFixedRate(timerTask, 1440000, 1440000);
     }
 }

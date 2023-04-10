@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -38,7 +38,7 @@ public class Badge {
     private Game game;
 
     @Column
-    private Integer steps;
+    private List<Integer> steps;
 
     @Column
     private Integer defaultSteps;
@@ -55,6 +55,24 @@ public class Badge {
         this.steps = badge.getSteps();
         this.defaultSteps = badge.getDefaultSteps();
         this.cost = badge.getCost();
+    }
+
+    public HashSet<MyUser> getUsers() {
+        List<MyUser> userTemp = new ArrayList<>();
+        if(this.users != null) {
+            userTemp.addAll(List.copyOf(this.users));
+        }
+        if(this.users == null) {
+            return new HashSet<>();
+        }
+        userTemp.sort(Comparator.comparing(MyUser::getId));
+        return new HashSet<>(userTemp);
+    }
+
+    public void setUsers(Set<MyUser> users) {
+        List<MyUser> userTemp = new ArrayList<>(List.copyOf(users));
+        userTemp.sort(Comparator.comparing(MyUser::getId));
+        this.users = new HashSet<>(userTemp);
     }
 
 

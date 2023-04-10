@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:class="http://www.w3.org/1999/xhtml">
+<head>
+    <title>collectR</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+            /* Style the tab */
+    .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+    background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+    background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar.html :: topnav}"></div>
+
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'adminQuests')" id="defaultOpen">Manage Quests</button>
+    <button class="tablinks" onclick="openTab(event, 'adminBadges')">Manage Badges</button>
+    <button class="tablinks" onclick="openTab(event, 'adminUsers')">Manage Users</button>
+</div>
+<!-- Tab content -->
+<div id="adminQuests" class="tabcontent">
+    <a href="/add-quest" type="button" class="btn btn-primary btn-sm">Add a quest</a>
+    <div th:each="quest : ${quests}">
+        <h3 th:text="${quest.getQuestName()}"></h3>
+        <p th:if="${!quest.getUsers().isEmpty()}">Users: </p>
+        <div th:each="user : ${quest.getUsers()}">
+            <span th:text="${user.getFullName()}"></span>
+        </div>
+        <p>Quest Description: <span th:text="${quest.getQuestDescription()}"></span></p>
+        <p>Quest Type: <span th:text="${quest.getQuestType()}"></span></p>
+        <p th:if="${!quest.getCompleted().isEmpty()}">Completed By: </p>
+        <div th:each="completion : ${quest.getCompleted()}">
+            <span th:text="${userService.findById(completion).getFullName() + ' '}"></span>
+        </div>
+        <p th:if="${!quest.getUsers().isEmpty()}">Owned By: </p>
+        <div th:each="user : ${quest.getUsers()}">
+            <span th:text="${user.getFullName() + ' '}"></span>
+        </div>
+        <p>Steps: <span th:text="${quest.getDefaultSteps()}"></span></p>
+        <p>Tier: <span th:text="${quest.getTier()}"></span></p>
+        <p>Created By: <span th:text="${quest.getCreatedBy()}"></span></p>
+    </div>
+</div>
+
+<div id="adminBadges" class="tabcontent">
+    <a href="/add-badge" type="button" class="btn btn-primary btn-sm">Add a badge</a>
+    <div th:each="badge : ${badges}">
+        <h3 th:text="${badge.getBadgeName()}"></h3>
+        <p th:if="${!badge.getUsers().isEmpty()}">Users: </p>
+        <div th:each="user : ${badge.getUsers()}">
+            <span th:text="${user.getFullName()}"></span>
+        </div>
+        <p>Image Source: <span th:text="${badge.getImgSource()}"></span></p>
+        <p th:if="${badge.getGame() != null}">Game: <span th:text="${badge.getGame().getName()}"></span></p>
+        <p th:if="${badge.getGame() != null}">Steps: <span th:text="${badge.getDefaultSteps()}"></span></p>
+        <p th:if="${badge.getGame() == null}" th:text="${'Cost: ' + badge.getCost()}"></p>
+    </div>
+</div>
+
+<div id="adminUsers" class="tabcontent">
+    <a href="/add-user" type="button"
+       class="btn btn-primary btn-sm">Add User</a>
+    <div th:each="userIteration : ${users}">
+        <h3 th:text="${userIteration.getFullName()}"></h3>
+        <p>Username: <span th:text="${userIteration.getUsername()}"></span></p>
+        <p>Full Name: <span th:text="${userIteration.getFullName()}"></span></p>
+        <p>Email: <span th:text="${userIteration.getEmail()}"></span></p>
+        <p>Tokens: <span th:text="${userIteration.getUserTokens()}"></span></p>
+        <p>Roles: <span th:each="role : ${userIteration.getRoles()}" th:text="${role.getName().replaceFirst('ROLE_', '')} + ' '"></span></p>
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{'/update-user/' + ${userIteration.id}}"
+               class="btn btn-success btn-sm">Update</a>
+            <a  th:href="@{'/delete-user/' + ${userIteration.id}}"
+                class="btn btn-danger btn-sm" th:if="${!userIteration.isAdmin()}">Delete</a>
+            <a  th:href="@{'/make-admin/' + ${userIteration.id}}"
+                class="btn btn-info btn-sm" th:if="${!userIteration.isAdmin()}">Make Admin</a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+
+</body>
+</html>

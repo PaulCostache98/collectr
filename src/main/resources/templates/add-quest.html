@@ -27,19 +27,16 @@
    if(selectedValue == 1) {
    	document.getElementById('stepsInput').value=10;
    	document.getElementById('rewardInput').value=15;
-   	document.getElementById('costInput').value=50;
    }
 
    if(selectedValue == 2) {
    	document.getElementById('stepsInput').value=15;
    	document.getElementById('rewardInput').value=75;
-   	document.getElementById('costInput').value=100;
    }
 
       if(selectedValue == 3) {
    	document.getElementById('stepsInput').value=20;
    	document.getElementById('rewardInput').value=150;
-   	document.getElementById('costInput').value=150;
    }
    }
 
@@ -49,9 +46,9 @@
 </head>
 <body>
 <div class="container-fluid text-center">
-  <div class="text-center"><h1>Create a Custom Quest</h1></div>
+  <div class="text-center"><h1>Create a Quest</h1></div>
 
-  <form action="#" th:action="@{/create-quest}" th:object="${quest}" method="post">
+  <form action="#" th:action="@{/add-quest}" th:object="${quest}" method="post">
     <input type="hidden" th:field="*{id}"/>
     <label class="col-sm-4 col-form-label"><h4>Name:</h4></label>
     <input type="text" th:field="*{questName}" class="form-control col-4 mb-4" required/>
@@ -70,16 +67,14 @@
     <label class="col-sm-4 col-form-label"><h4>Tier:</h4></label>
     <select id="tierSelection" class="form-control col-4 mb-4" th:field="*{tier}" onchange="changeSteps()">
       <option value="1">Tier 1</option>
-      <option th:if="${tierTwoCheck}" value="2" >Tier 2</option>
-      <option th:if="${!tierTwoCheck}" value="0" disabled >Tier 2</option>
-      <option th:if="${tierThreeCheck}" value="3" >Tier 3</option>
-      <option th:if="${!tierThreeCheck}" value="0" disabled>Tier 3</option>
+      <option value="2" >Tier 2</option>
+      <option value="3" >Tier 3</option>
     </select>
-    <label class="col-sm-4 col-form-label"><h4>Cost:</h4></label>
-    <input id="costInput" type="text" class="form-control col-4 mb-4" readonly/>
+<!--    <label class="col-sm-4 col-form-label"><h4>Cost:</h4></label>-->
+<!--    <input id="costInput" type="text" class="form-control col-4 mb-4" readonly/>-->
     <br>
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="/shop" type="button" class="btn btn-secondary">Back</a>
+    <a href="/admin-page" type="button" class="btn btn-secondary">Back</a>
   </form>
 </div>
 </body>

@@ -1,6 +1,4 @@
 package com.gamification.collectr.controller;
-
-import com.gamification.collectr.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -10,14 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 public class LoginController {
-
-    @Autowired
-    UserService userService;
-
     @Autowired
     HttpServletRequest request;
 
@@ -26,7 +18,6 @@ public class LoginController {
     public String login(Model model) {
         request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        model.addAttribute("name", userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return "login";
         }

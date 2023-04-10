@@ -7,22 +7,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-    <style>
-        body {
-        background-image: url("https://img.freepik.com/free-photo/abstract-view-urban-scene-skyscrapers_53876-14116.jpg");
-        background-size: cover;
-        }
-    </style>
 </head>
 <body>
 
-<div th:replace="fragments/navbar.html :: topnav"></div>
+<div th:replace="~{fragments/navbar.html :: topnav}"></div>
+<div style="background-color: #fefbd8; padding: 10px; border: 2px solid red;">
+<h3>Welcome!</h3>
+<p>Guidelines:</p>
+<p>After registering an account, a user:<br>
+    1. Starts with 10 tokens to spend on their first quest.<br>
+    2. Has access to the shop, the games, the scoreboard and their account page(accessible by clicking their name in the top right corner).<br>
+    3. Will be able to complete SYSTEM quests daily. These quests are pre-generated, as well as created by Admins.<br>
+    4. Be free to play the games as they wish, however progress will only count if the user has bought a quest.<br>
 
+    Once the user has gained enough money and completed quests, they will start earning badges.<br>
+    Badges can be earned by completing quests, or bought with tokens. This is necessary if a user will want to create their own quests.<br>
 
+    Creating a quest will require at least 50 tokens and 3 earned badges. However, this is the only way for users to generate passive income.<br>
+    A user-generated quest, when bought, will redirect those tokens to the creator. This means that newer players will wish to buy quests from older users, especially given SYSTEM quests are reset only daily.<br>
+</p>
+</div>
 
-
-<!-- Load icon library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </body>

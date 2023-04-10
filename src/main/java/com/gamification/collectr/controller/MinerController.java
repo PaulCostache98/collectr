@@ -47,8 +47,8 @@ public class MinerController {
                     q.getCompleted().add(user.getId());
                     user.setUserTokens(user.getUserTokens()+q.getReward());
                     List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
-                    badgeTemp.forEach(b -> b.setSteps(b.getSteps()+1));
-                    List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps(), b.getDefaultSteps())).toList();
+                    badgeTemp.forEach(b -> b.getSteps().set(b.getUsers().stream().toList().indexOf(user), b.getSteps().get(b.getUsers().stream().toList().indexOf(user))+1));
+                    List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(b.getUsers().stream().toList().indexOf(user)), b.getDefaultSteps())).toList();
                     user.getBadges().addAll(badgeCompleted);
                 }
             }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Add User</title>
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+  <style>
+
+    Body { margin: 0; font-family: "Optima", sans-serif, color: black
+    }
+    h1 { font-size: 40px; color: black; font-family: "Optima", sans-serif;
+    }
+    h2 {font-size: 16px; color: black  ; font-family: "Optima", sans-serif;
+    }
+
+    </style>
+
+</head>
+<body><br><br>
+<div class="container-fluid text-center">
+  <div class="text-center"><h1>Add Badge</h1></div>
+
+  <form action="#" th:action="@{/add-badge}" th:object="${badge}" method="post"
+        style="max-width:280px; margin:0 auto"><br>
+
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label"><h2>Name:</h2></label>
+      <div class="col-sm-8">
+        <br>
+        <input type="text" th:field="*{badgeName}" id="badgeName" required/>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label"><h2>Image Source:</h2></label>
+      <div class="col-sm-8">
+        <br>
+        <input type="text" th:field="*{imgSource}" id="imgSource" required/>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label"><h2>Steps:</h2></label>
+      <div class="col-sm-8">
+        <br>
+        <input type="text" th:field="*{defaultSteps}" id="defaultSteps" required/>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label"><h2>Game:</h2></label>
+      <div class="col-sm-8">
+        <br>
+        <select id="gameSelection" class="form-control col-4 mb-4" th:field="*{game}">
+          <div th:each="game : ${games}">
+            <option th:value="${game.getId()}" th:text="${game.getName()}"></option>
+          </div>
+          <option th:value="${null}">Wealth</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-4 col-form-label"><h2>Cost:</h2></label>
+      <div class="col-sm-8">
+        <br>
+        <input type="text" th:field="*{cost}" id="cost" required/>
+      </div>
+    </div>
+
+
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-success">Add Badge</button>
+    </div>
+    <br>
+  </form>
+</div>
+</body>
+</html>

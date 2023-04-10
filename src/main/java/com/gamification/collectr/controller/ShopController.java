@@ -6,7 +6,6 @@ import com.gamification.collectr.entity.Quest;
 import com.gamification.collectr.exception.BadgeNotFoundException;
 import com.gamification.collectr.exception.QuestNotFoundException;
 import com.gamification.collectr.service.BadgeService;
-import com.gamification.collectr.service.GameService;
 import com.gamification.collectr.service.QuestService;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +31,11 @@ public class ShopController {
     @Autowired
     BadgeService badgeService;
 
-    @Autowired
-    GameService gameService;
-
     @RequestMapping("/shop")
     public String questsPage(Model model) {
         List<Quest> quests = questService.findAll();
-        List<Badge> gameBadges = badgeService.findAll().stream().filter(b -> !gameService.findAll().stream().filter(g -> g.getBadges().contains(b)).toList().isEmpty()).toList();
-        List<Badge> wealthBadges = badgeService.findAll().stream().filter(b -> gameService.findAll().stream().filter(g -> g.getBadges().contains(b)).toList().isEmpty()).toList();
+        List<Badge> gameBadges = badgeService.findAll().stream().filter(b -> b.getGame() != null).toList();
+        List<Badge> wealthBadges = badgeService.findAll().stream().filter(b -> b.getGame() == null).toList();
 
         model.addAttribute("quests", quests);
         model.addAttribute("gameBadges", gameBadges);

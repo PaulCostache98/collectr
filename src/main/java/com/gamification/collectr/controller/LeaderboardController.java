@@ -1,7 +1,6 @@
 package com.gamification.collectr.controller;
 
 import com.gamification.collectr.entity.MyUser;
-import com.gamification.collectr.entity.Quest;
 import com.gamification.collectr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

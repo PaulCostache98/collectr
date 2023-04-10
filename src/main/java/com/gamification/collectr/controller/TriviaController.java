@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -43,11 +42,6 @@ public class TriviaController {
 
     @RequestMapping("games/1")
     String trivia(Model model) {
-
-//        if(count == 5) {
-//            count = 0;
-//            return "redirect:/games/1/end";
-//        }
         List<Question> questions = readDataLineByLine("src/main/resources/trivia.csv");
         Random random = new Random();
         int questionNumber = random.nextInt(198);
@@ -59,7 +53,6 @@ public class TriviaController {
         Collections.shuffle(answers);
         model.addAttribute("question", questions.get(questionNumber));
         model.addAttribute("answers", answers);
-//        count++;
         model.addAttribute("correctCount", correctCount);
         model.addAttribute("count", count);
         return "trivia";
@@ -117,8 +110,8 @@ public class TriviaController {
                         user.setUserTokens(user.getUserTokens()+q.getReward());
                         questService.saveQuest(q);
                         List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
-                        badgeTemp.forEach(b -> b.setSteps(b.getSteps()+1));
-                        List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps(), b.getDefaultSteps())).toList();
+                        badgeTemp.forEach(b -> b.getSteps().set(b.getUsers().stream().toList().indexOf(user), b.getSteps().get(b.getUsers().stream().toList().indexOf(user))+1));
+                        List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(b.getUsers().stream().toList().indexOf(user)), b.getDefaultSteps())).toList();
                         user.getBadges().addAll(badgeCompleted);
                     }
                 }

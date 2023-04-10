@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>Quests List</title>
+  <title>collectR</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -11,10 +11,10 @@
 </head>
 <body>
 
-<div th:replace="fragments/navbar.html :: topnav"></div>
+<div th:replace="~{fragments/navbar.html :: topnav}"></div>
 
 <div>
-  <div th:each="user : ${users}">
+  <div th:each="user : ${users}" style="border-radius: 25px;border: 2px solid #73AD21;padding: 20px;width: 200px;height: 170px;">
     <p th:text="${'User Name: ' + user.getFullName()}"></p>
     <p th:text="${'User Score: ' + user.getLeaderboardScore()}"></p>
     <p th:text="${'Badges: ' + user.getBadges().size()}"></p>

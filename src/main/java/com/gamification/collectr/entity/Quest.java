@@ -3,11 +3,8 @@ package com.gamification.collectr.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.gamification.collectr.converter.IntegerListConverter;
-import com.gamification.collectr.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.util.*;
 
@@ -35,7 +32,6 @@ public class Quest {
     private String questType;
 
     @Column
-//    @Convert(converter = IntegerListConverter.class)
     private List<Integer> steps;
 
     @Column
@@ -48,7 +44,6 @@ public class Quest {
     private String createdBy;
 
     @Column
-//    @Convert(converter = LongListConverter.class)
     private List<Long> completed;
 
     @Column(name = "reward", nullable = false)
@@ -87,7 +82,7 @@ public class Quest {
             userTemp.addAll(List.copyOf(this.users));
         }
         if(this.users == null) {
-            return new HashSet<MyUser>();
+            return new HashSet<>();
         }
         userTemp.sort(Comparator.comparing(MyUser::getId));
         return new HashSet<>(userTemp);

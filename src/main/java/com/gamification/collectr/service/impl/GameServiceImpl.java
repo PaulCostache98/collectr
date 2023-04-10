@@ -1,11 +1,8 @@
 package com.gamification.collectr.service.impl;
 
 import com.gamification.collectr.entity.Game;
-import com.gamification.collectr.entity.Quest;
 import com.gamification.collectr.exception.GameNotFoundException;
-import com.gamification.collectr.exception.QuestNotFoundException;
 import com.gamification.collectr.repository.GameRepository;
-import com.gamification.collectr.repository.QuestRepository;
 import com.gamification.collectr.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

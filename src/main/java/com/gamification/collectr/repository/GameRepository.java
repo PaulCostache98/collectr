@@ -1,6 +1,5 @@
 package com.gamification.collectr.repository;
 
-import com.gamification.collectr.entity.Badge;
 import com.gamification.collectr.entity.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

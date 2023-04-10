@@ -2,13 +2,12 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:class="http://www.w3.org/1999/xhtml">
 <head>
-    <title>PC Shop</title>
+    <title>collectR</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link th:href="@{/css/sidenav.css}" rel="stylesheet"/>
 
     <style>
             /* Style the tab */
@@ -49,7 +48,7 @@
     </style>
 </head>
 <body>
-<div th:replace="fragments/navbar.html :: topnav"></div>
+<div th:replace="~{fragments/navbar.html :: topnav}"></div>
 
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'questListings')" id="defaultOpen">Quests</button>
@@ -61,7 +60,7 @@
        class="btn btn-primary btn-sm">Create Custom Quest</a><br>
     <span th:if="${userDetails.getUserTokens()<50 || userDetails.getBadges.size()<3}"> For a user to create a Quest, they'll need at least 50 tokens and 3 badges earned.</span>
     <h3 th:if="${!quests.isEmpty()}">Listed Quests</h3>
-    <div th:each="quest : ${quests}">
+    <div th:each="quest : ${quests}" style="border-radius: 25px; border: 2px solid #73AD21; padding: 20px; width: 500px;height: 200px;">
         <span th:text="${'Name: ' + quest.getQuestName()}"></span><br>
         <span th:text="${'Description: ' + quest.getQuestDescription()}"></span><br>
         <span th:text="${'Type: ' + quest.getQuestType()}"></span><br>
@@ -80,8 +79,6 @@
         </div>
         <span th:if="${quest.getUsers().contains(userDetails) && !quest.getCreatedBy().equals(user)}">You already own this Quest.</span>
         <span th:if="${quest.getCreatedBy().equals(user)}">You created this quest.</span>
-        <br>
-        <br>
     </div>
 </div>
 
@@ -94,7 +91,8 @@
     <div th:each="badge : ${wealthBadges}">
         <img th:src="${badge.getImgSource()}" width="20" height="20">
         <span th:text="${badge.getBadgeName()}"></span><br>
-        <a th:if="${userDetails.getUserTokens() >= badge.getCost()}" th:text="${'Buy Now - ' + badge.getCost()}" th:href="@{/badges/buy/{id}(id=${badge.getId()})}"></a>
+        <a th:if="${userDetails.getUserTokens() >= badge.getCost() && !userDetails.getBadges().contains(badge)}" th:text="${'Buy Now - ' + badge.getCost()}" th:href="@{/badges/buy/{id}(id=${badge.getId()})}"></a>
+        <span th:if="${userDetails.getBadges().contains(badge)}"> Bought</span>
     </div>
 </div>
 
