@@ -39,21 +39,22 @@ public class MinerController {
             currentMessage = "You have finished mining the rock.";
             List<Quest> questsTemp = user.getQuests().stream().filter(q -> Objects.equals(q.getQuestType(), "Miner") && !(!(q.getCompleted() == null) && q.getCompleted().contains(user.getId()))).toList();
             questsTemp.forEach(user.getQuests()::remove);
-            questsTemp.forEach(q -> q.getSteps().set(q.getUsers().stream().toList().indexOf(user), q.getSteps().get(q.getUsers().stream().toList().indexOf(user))-1));
+            questsTemp.forEach(q -> q.getSteps().set(userService.findAll().indexOf(user), q.getSteps().get(userService.findAll().indexOf(user))-1));
             for (Quest q: questsTemp) {
-                if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) <= 0)
+                if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) == 0)
                 {
                     q.getSteps().set(q.getUsers().stream().toList().indexOf(user), -1);
                     q.getCompleted().add(user.getId());
                     user.setUserTokens(user.getUserTokens()+q.getReward());
                     List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
-                    badgeTemp.forEach(b -> b.getSteps().set(b.getUsers().stream().toList().indexOf(user), b.getSteps().get(b.getUsers().stream().toList().indexOf(user))+1));
-                    List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(b.getUsers().stream().toList().indexOf(user)), b.getDefaultSteps())).toList();
+                    badgeTemp.forEach(b -> b.getSteps().set(userService.findAll().indexOf(user), b.getSteps().get(userService.findAll().indexOf(user))+1));
+                    List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(userService.findAll().indexOf(user)), b.getDefaultSteps())).toList();
                     user.getBadges().addAll(badgeCompleted);
                 }
             }
             user.getQuests().addAll(questsTemp);
             userService.saveUser(user);
+            clickCount = 0;
         }
         else clickCount++;
         model.addAttribute("currentMessage", currentMessage);

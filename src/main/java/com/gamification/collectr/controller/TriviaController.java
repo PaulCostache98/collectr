@@ -96,22 +96,22 @@ public class TriviaController {
         if(correctCount >= 3) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             MyUser user = userService.findUserByUserName(authentication.getName());
-            List<Quest> quests = questService.findAll().stream().filter(q -> q.getQuestType().equals("Trivia") && !q.getCompleted().contains(user.getId())).toList();
+            List<Quest> quests = questService.findAll().stream().filter(q -> q.getQuestType().equals("Trivia") && !q.getCompleted().contains(user.getId()) && user.getQuests().contains(q)).toList();
             quests = quests.stream().filter(q -> !q.getCompleted().contains(user.getId())).toList();
             if(!quests.isEmpty())
             {
                 quests.forEach(user.getQuests()::remove);
-                quests.forEach(q -> q.getSteps().set(q.getUsers().stream().toList().indexOf(user), q.getSteps().get(q.getUsers().stream().toList().indexOf(user))-1));
+                quests.forEach(q -> q.getSteps().set(userService.findAll().indexOf(user), q.getSteps().get(userService.findAll().indexOf(user))-1));
                 for (Quest q: quests) {
-                    if(q.getSteps().get(q.getUsers().stream().toList().indexOf(user)) == 0)
+                    if(q.getSteps().get(userService.findAll().indexOf(user)) == 0)
                     {
-                        q.getSteps().set(q.getUsers().stream().toList().indexOf(user), -1);
+                        q.getSteps().set(userService.findAll().indexOf(user), -1);
                         q.getCompleted().add(user.getId());
                         user.setUserTokens(user.getUserTokens()+q.getReward());
                         questService.saveQuest(q);
                         List<Badge> badgeTemp = badgeService.findAll().stream().filter(b -> (b.getGame() != null && b.getGame().getType().equals(q.getQuestType()))).toList();
-                        badgeTemp.forEach(b -> b.getSteps().set(b.getUsers().stream().toList().indexOf(user), b.getSteps().get(b.getUsers().stream().toList().indexOf(user))+1));
-                        List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(b.getUsers().stream().toList().indexOf(user)), b.getDefaultSteps())).toList();
+                        badgeTemp.forEach(b -> b.getSteps().set(userService.findAll().indexOf(user), b.getSteps().get(userService.findAll().indexOf(user))+1));
+                        List<Badge> badgeCompleted = badgeTemp.stream().filter(b -> Objects.equals(b.getSteps().get(userService.findAll().indexOf(user)), b.getDefaultSteps())).toList();
                         user.getBadges().addAll(badgeCompleted);
                     }
                 }

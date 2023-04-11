@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class ShopController {
@@ -57,7 +58,7 @@ public class ShopController {
         }
         MyUser user = userService.findUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setUserTokens(user.getUserTokens() - price);
-        quest.getSteps().set((int) (user.getId()-1), quest.getDefaultSteps());
+        quest.getSteps().set(userService.findAll().indexOf(user), quest.getDefaultSteps());
         user.getQuests().add(quest);
         List<MyUser> users = userService.findAll();
         for (MyUser userTemp : users) {
@@ -99,7 +100,7 @@ public class ShopController {
             Quest quest = new Quest();
             boolean tierTwoCheck = false;
             boolean tierThreeCheck = false;
-            model.addAttribute("types", questService.findAll().stream().map(Quest::getQuestType));
+            model.addAttribute("types", questService.findAll().stream().map(Quest::getQuestType).collect(Collectors.toSet()));
             model.addAttribute("quest", quest);
             if(user.getUserTokens() >= 100) {
                 tierTwoCheck = true;

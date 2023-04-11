@@ -70,10 +70,6 @@
         <div th:each="completion : ${quest.getCompleted()}">
             <span th:text="${userService.findById(completion).getFullName() + ' '}"></span>
         </div>
-        <p th:if="${!quest.getUsers().isEmpty()}">Owned By: </p>
-        <div th:each="user : ${quest.getUsers()}">
-            <span th:text="${user.getFullName() + ' '}"></span>
-        </div>
         <p>Steps: <span th:text="${quest.getDefaultSteps()}"></span></p>
         <p>Tier: <span th:text="${quest.getTier()}"></span></p>
         <p>Created By: <span th:text="${quest.getCreatedBy()}"></span></p>

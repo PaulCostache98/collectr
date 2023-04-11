@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -127,7 +128,7 @@ public class AdminController {
 
         Quest quest = new Quest();
         model.addAttribute("quest", quest);
-        model.addAttribute("types", questService.findAll().stream().map(Quest::getQuestType));
+        model.addAttribute("types", questService.findAll().stream().map(Quest::getQuestType).collect(Collectors.toSet()));
 
         return "add-quest";
     }
